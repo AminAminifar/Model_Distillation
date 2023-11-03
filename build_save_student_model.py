@@ -42,6 +42,7 @@ def train_student_with_distillation(student_model, teacher_model, train_data, di
 
         # Calculate validation accuracy or other metrics as needed
         # Optionally, save the student model checkpoint
+        return student_model
 
 # load data
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
@@ -50,3 +51,19 @@ def train_student_with_distillation(student_model, teacher_model, train_data, di
 # assert y_train.shape == (60000,)
 # assert y_test.shape == (10000,)
 
+# Create data loaders
+batch_size = 50
+train_data = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).batch(batch_size)
+
+student_model = train_student_with_distillation(student_model, teacher_model, train_data,
+                                distillation_loss_fn=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                                optimizer= 'adam', epochs=20)
+
+# save model
+checkpoint_path = "model_student/cp-{epoch:04d}.ckpt"
+checkpoint_dir = os.path.dirname(checkpoint_path)
+
+student_model.save_weights(checkpoint_path.format(epoch=0))
+
+# evaluate model
+test_loss, test_acc = student_model.evaluate(x_test, y_test, verbose=2)
