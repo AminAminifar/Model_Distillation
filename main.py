@@ -16,20 +16,20 @@ import Distiller
 
 # set parameters
 # batch_size = 15
-model_num_teacher = 0  # check models file for details
-model_num_student = 0  # check models file for details
+model_num_teacher = 3  # check models file for details
+model_num_student = 3  # check models file for details
 
 batch_size_teacher = 100
-epochs_teacher = 5
+epochs_teacher = 10
 
-temperature = 20
+temperature = 2
 alpha = 0.1
 batch_size_student = 100
-epochs_student = 5
+epochs_student = 10
 
 check_student_scratch_flag = True
 batch_size_student_scratch = 100
-epochs__student_scratch = 5
+epochs__student_scratch = 10
 ################################################################
 # Create student and teacher models
 ################################################################

@@ -69,6 +69,25 @@ def import_teacher(model_num=0):
             name="teacher",
         )
 
+    if model_num == 3:
+        # Create the teacher
+        teacher = keras.Sequential(
+            [
+                keras.Input(shape=(28, 28, 1)),
+                layers.Conv2D(256, (3, 3), strides=(2, 2), padding="same"),
+                layers.LeakyReLU(alpha=0.2),
+                layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same"),
+                layers.Conv2D(512, (3, 3), strides=(2, 2), padding="same"),
+                layers.Flatten(),
+
+                tf.keras.layers.Lambda(lambda x: x / 2),  # x / temperature
+
+                # output layer
+                tf.keras.layers.Dense(units=10, activation=tf.nn.softmax)
+            ],
+            name="teacher",
+        )
+
     return teacher
 
 
@@ -130,6 +149,22 @@ def import_student(model_num=0):
                 layers.Conv2D(32, (3, 3), strides=(2, 2), padding="same"),
                 layers.Flatten(),
                 layers.Dense(10),
+            ],
+            name="student",
+        )
+
+    if model_num == 3:
+    # Create the student
+        student = keras.Sequential(
+            [
+                keras.Input(shape=(28, 28, 1)),
+                layers.Conv2D(16, (3, 3), strides=(2, 2), padding="same"),
+                layers.LeakyReLU(alpha=0.2),
+                layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1), padding="same"),
+                layers.Conv2D(32, (3, 3), strides=(2, 2), padding="same"),
+                layers.Flatten(),
+                tf.keras.layers.Lambda(lambda x: x / 2),  # x / temperature
+                layers.Dense(10, activation=tf.nn.softmax),
             ],
             name="student",
         )
